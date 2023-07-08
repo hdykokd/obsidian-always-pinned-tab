@@ -10,5 +10,7 @@ if [ -z "$version" ]; then
 fi
 
 pnpm run version
-git tag -a "$version" -m "Release $version"
+git add .
+git commit -m "chore: release $version"
+git tag -a "$version" -m "$version"
 git push origin "$version"
