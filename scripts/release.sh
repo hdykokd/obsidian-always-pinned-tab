@@ -11,3 +11,4 @@ fi
 
 pnpm run version
 git tag -a "$version" -m "Release $version"
+git push origin "$version"
