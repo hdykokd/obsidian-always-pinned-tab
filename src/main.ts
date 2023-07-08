@@ -1,13 +1,6 @@
-import { App, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { Plugin } from 'obsidian';
 import { log } from './log';
-
-interface AlwaysPinnedTabSettings {
-  avoidDuplicateTabs: boolean;
-}
-
-const DEFAULT_SETTINGS: AlwaysPinnedTabSettings = {
-  avoidDuplicateTabs: false,
-};
+import { AlwaysPinnedTabSettings, AlwaysPinnedTabSettingTab, DEFAULT_SETTINGS } from './setting';
 
 export default class AlwaysPinnedTab extends Plugin {
   settings: AlwaysPinnedTabSettings;
@@ -70,38 +63,5 @@ export default class AlwaysPinnedTab extends Plugin {
 
   async saveSettings() {
     await this.saveData(this.settings);
-  }
-}
-
-class AlwaysPinnedTabSettingTab extends PluginSettingTab {
-  plugin: AlwaysPinnedTab;
-
-  constructor(app: App, plugin: AlwaysPinnedTab) {
-    super(app, plugin);
-    this.plugin = plugin;
-  }
-
-  save(): void {
-    this.plugin.saveSettings();
-  }
-
-  display(): void {
-    const { containerEl } = this;
-
-    containerEl.empty();
-
-    containerEl.createEl('h2', { text: 'Always Pinned Tab' });
-
-    new Setting(containerEl)
-      .setName('Avoid duplicate tabs')
-      .setDesc(
-        'If the opened file already exists in tabs, the plugin will close the newly opened leaf and activate the pre-existing leaf.',
-      )
-      .addToggle((toggle) =>
-        toggle.onChange((value) => {
-          this.plugin.settings.avoidDuplicateTabs = value;
-          this.save();
-        }),
-      );
   }
 }
