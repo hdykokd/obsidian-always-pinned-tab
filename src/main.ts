@@ -1,4 +1,4 @@
-import { Plugin } from 'obsidian';
+import { Plugin, WorkspaceLeaf } from 'obsidian';
 import { log } from './message';
 import { AlwaysPinnedTabSettings, AlwaysPinnedTabSettingTab, DEFAULT_SETTINGS } from './setting';
 
@@ -21,39 +21,42 @@ export default class AlwaysPinnedTab extends Plugin {
   async registerEvents() {
     this.app.workspace.on('active-leaf-change', (leaf) => {
       if (!leaf) return;
-      const state = leaf.getViewState();
-      if (state.type !== 'markdown') return;
 
-      if (!this.settings.avoidDuplicateTabs) {
-        // @ts-expect-error
-        if (!leaf.pinned) {
-          leaf.setPinned(true);
-        }
-        return;
-      }
-
-      const file = this.app.workspace.getActiveFile();
-      const activeViews = this.app.workspace.getLeavesOfType('markdown');
-      const sameViews = activeViews.filter((l) => {
-        const s = l.view.getState();
-        if (s.file === file?.path) {
-          return true;
-        }
-        return false;
-      });
-
-      const [main, ...duplicates] = sameViews;
       // @ts-expect-error
-      if (!main.pinned) {
-        main.setPinned(true);
+      if (!leaf.pinned) {
+        leaf.setPinned(true);
       }
-      this.app.workspace.setActiveLeaf(main);
 
-      duplicates.forEach((l) => {
-        sleep(0).then(() => {
-          l.detach();
+      if (this.settings.avoidDuplicateTabs) {
+        const sameLeaves: WorkspaceLeaf[] = [];
+
+        // @ts-expect-error
+        leaf.parent?.children?.forEach((child: WorkspaceLeaf & { id: string }) => {
+          const l = this.app.workspace.getLeafById(child.id);
+          const isMarkdown = 'file' in leaf.view && 'file' in l.view;
+          // @ts-expect-error
+          if (isMarkdown && leaf.view.file?.path === l.view.file?.path) {
+            sameLeaves.push(l);
+          } else {
+            // @ts-expect-error
+            if (leaf.view.titleEl.innerText === l.view.titleEl.innerText) {
+              sameLeaves.push(l);
+            }
+          }
         });
-      });
+        const [main, ...duplicates] = sameLeaves;
+        // @ts-expect-error
+        if (!main.pinned) {
+          main.setPinned(true);
+        }
+        this.app.workspace.setActiveLeaf(main);
+
+        duplicates.forEach((l) => {
+          sleep(0).then(() => {
+            l.detach();
+          });
+        });
+      }
     });
   }
 
