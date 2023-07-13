@@ -12,9 +12,13 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8.6.5
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
+          cache: 'pnpm'
 
       - run: pnpm install
       - run: pnpm run build
