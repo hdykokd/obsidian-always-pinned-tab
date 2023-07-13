@@ -1,5 +1,5 @@
 import { Plugin } from 'obsidian';
-import { log } from './log';
+import { log } from './message';
 import { AlwaysPinnedTabSettings, AlwaysPinnedTabSettingTab, DEFAULT_SETTINGS } from './setting';
 
 export default class AlwaysPinnedTab extends Plugin {
