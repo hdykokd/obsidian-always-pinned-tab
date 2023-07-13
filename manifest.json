@@ -1,7 +1,7 @@
 {
 	"id": "always-pinned-tab",
 	"name": "Always Pinned Tab",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"minAppVersion": "0.15.0",
 	"description": "This is a plugin for Obsidian that enhances your workflow by automatically pinning every new tab you open",
 	"author": "hdykokd",
