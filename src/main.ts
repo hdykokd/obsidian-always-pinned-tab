@@ -39,7 +39,10 @@ export default class AlwaysPinnedTab extends Plugin {
             sameLeaves.push(l);
           } else {
             // @ts-expect-error
-            if (leaf.view.titleEl.innerText === l.view.titleEl.innerText) {
+            const t1 = leaf?.view?.titleEl?.innerText;
+            // @ts-expect-error
+            const t2 = l?.view?.titleEl?.innerText;
+            if (t1 && t2 && t1 === t2) {
               sameLeaves.push(l);
             }
           }
