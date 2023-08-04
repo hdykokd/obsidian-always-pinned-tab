@@ -37,16 +37,9 @@ export default class AlwaysPinnedTab extends Plugin {
           // @ts-expect-error
           if (isMarkdown && leaf.view.file?.path === l.view.file?.path) {
             sameLeaves.push(l);
-          } else {
-            // @ts-expect-error
-            const t1 = leaf?.view?.titleEl?.innerText;
-            // @ts-expect-error
-            const t2 = l?.view?.titleEl?.innerText;
-            if (t1 && t2 && t1 === t2) {
-              sameLeaves.push(l);
-            }
           }
         });
+        if (sameLeaves.length === 0) return;
         const [main, ...duplicates] = sameLeaves;
         // @ts-expect-error
         if (!main.pinned) {
